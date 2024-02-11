@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
-
-const inter = Inter({ subsets: ["latin"] });
+import { Nunito } from "next/font/google";
+import ToastProvider from "@/components/providers/toaster-provider";
 
 export const metadata: Metadata = {
   title: "VirtuLearn",
@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   },
 };
 
+const nunito = Nunito({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,13 +32,14 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={inter.className}>
+        <body className={nunito.className}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
+            <ToastProvider />
             {children}
           </ThemeProvider>
         </body>

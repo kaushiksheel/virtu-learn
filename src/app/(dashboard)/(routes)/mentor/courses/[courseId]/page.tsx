@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import React from "react";
+import TitleForm from "./_components/TitleForm";
 
 async function SpecificCoursePage({
   params,
@@ -51,6 +52,7 @@ async function SpecificCoursePage({
           <div className="flex items-center  gap-x-2">
             <h3 className="text-xl ">Customize your course</h3>
           </div>
+          <TitleForm initialData={course} />
         </div>
       </div>
     </div>

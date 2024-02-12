@@ -6,6 +6,7 @@ import TitleForm from "./_components/TitleForm";
 import DescForm from "./_components/DescForm";
 import ImageForm from "./_components/ImageForm";
 import CategoryForm from "./_components/CategoryForm";
+import PriceForm from "./_components/PriceForm";
 
 async function SpecificCoursePage({
   params,
@@ -71,6 +72,18 @@ async function SpecificCoursePage({
               value: id,
             }))}
           />
+        </div>
+        <div className="space-y-5">
+          <div>
+            <h3 className="text-xl">Chapters</h3>
+          </div>
+          <div className="">
+            <p>Todo : CHAPTERS</p>
+          </div>
+          <div className="flex items-center gap-x-2">
+            <h3 className="text-xl">Sell your course</h3>
+          </div>
+          <PriceForm initialData={course} />
         </div>
       </div>
     </div>

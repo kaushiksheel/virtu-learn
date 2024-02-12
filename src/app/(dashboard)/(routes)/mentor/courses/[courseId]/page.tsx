@@ -7,6 +7,8 @@ import DescForm from "./_components/DescForm";
 import ImageForm from "./_components/ImageForm";
 import CategoryForm from "./_components/CategoryForm";
 import PriceForm from "./_components/PriceForm";
+import { File } from "lucide-react";
+import AttachmentForm from "./_components/AttachmentForm";
 
 async function SpecificCoursePage({
   params,
@@ -21,6 +23,13 @@ async function SpecificCoursePage({
   const course = await db.course.findUnique({
     where: {
       id: params.courseId,
+    },
+    include: {
+      attachments: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
   });
 
@@ -84,6 +93,14 @@ async function SpecificCoursePage({
             <h3 className="text-xl">Sell your course</h3>
           </div>
           <PriceForm initialData={course} />
+
+          <div className="">
+            <div className="flex items-center gap-x-3">
+              <File />
+              <h3 className="text-xl">Attachements</h3>
+            </div>
+            <AttachmentForm initialData={course} />
+          </div>
         </div>
       </div>
     </div>

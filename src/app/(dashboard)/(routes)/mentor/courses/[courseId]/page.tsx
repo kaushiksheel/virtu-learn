@@ -5,6 +5,7 @@ import React from "react";
 import TitleForm from "./_components/TitleForm";
 import DescForm from "./_components/DescForm";
 import ImageForm from "./_components/ImageForm";
+import CategoryForm from "./_components/CategoryForm";
 
 async function SpecificCoursePage({
   params,
@@ -19,6 +20,12 @@ async function SpecificCoursePage({
   const course = await db.course.findUnique({
     where: {
       id: params.courseId,
+    },
+  });
+
+  const categories = await db.category.findMany({
+    orderBy: {
+      name: "asc",
     },
   });
 
@@ -57,6 +64,13 @@ async function SpecificCoursePage({
           <TitleForm initialData={course} />
           <DescForm initialData={course} />
           <ImageForm initialData={course} />
+          <CategoryForm
+            initialData={course}
+            options={categories.map(({ id, name }) => ({
+              label: name,
+              value: id,
+            }))}
+          />
         </div>
       </div>
     </div>

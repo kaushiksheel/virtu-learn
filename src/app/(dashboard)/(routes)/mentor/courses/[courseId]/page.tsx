@@ -3,6 +3,8 @@ import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import React from "react";
 import TitleForm from "./_components/TitleForm";
+import DescForm from "./_components/DescForm";
+import ImageForm from "./_components/ImageForm";
 
 async function SpecificCoursePage({
   params,
@@ -53,6 +55,8 @@ async function SpecificCoursePage({
             <h3 className="text-xl ">Customize your course</h3>
           </div>
           <TitleForm initialData={course} />
+          <DescForm initialData={course} />
+          <ImageForm initialData={course} />
         </div>
       </div>
     </div>

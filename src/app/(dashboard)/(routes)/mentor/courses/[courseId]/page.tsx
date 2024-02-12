@@ -9,6 +9,7 @@ import CategoryForm from "./_components/CategoryForm";
 import PriceForm from "./_components/PriceForm";
 import { File } from "lucide-react";
 import AttachmentForm from "./_components/AttachmentForm";
+import ChaptersForm from "./_components/ChaptersForm";
 
 async function SpecificCoursePage({
   params,
@@ -23,8 +24,14 @@ async function SpecificCoursePage({
   const course = await db.course.findUnique({
     where: {
       id: params.courseId,
+      userId,
     },
     include: {
+      chapters: {
+        orderBy: {
+          position: "asc",
+        },
+      },
       attachments: {
         orderBy: {
           createdAt: "desc",
@@ -49,6 +56,7 @@ async function SpecificCoursePage({
     course.imageUrl,
     course.price,
     course.categoryId,
+    course.chapters.some(({ isPublished }) => isPublished),
   ];
 
   const totalFields = requiredFields.length;
@@ -87,7 +95,7 @@ async function SpecificCoursePage({
             <h3 className="text-xl">Chapters</h3>
           </div>
           <div className="">
-            <p>Todo : CHAPTERS</p>
+            <ChaptersForm initialData={course} />
           </div>
           <div className="flex items-center gap-x-2">
             <h3 className="text-xl">Sell your course</h3>

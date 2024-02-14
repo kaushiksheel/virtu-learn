@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
+import ChapterList from "./ChapterList";
 
 interface ChaptersFormProps {
   initialData: Course & { chapters: Chapter[] };
@@ -59,8 +60,27 @@ const ChaptersForm = ({ initialData }: ChaptersFormProps) => {
     }
   };
 
+  const onReorder = async (updateData: { id: string; position: number }[]) => {
+    try {
+      setIsUpdating(true);
+
+      await axios.put(`/api/courses/${initialData.id}/chapters/reorder`, {
+        list: updateData,
+      });
+      toast.success("Chapters reordered");
+      router.refresh();
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleOnEdit = (id: string) => {
+    router.push(`/mentor/courses/${initialData.id}/chapters/${id}`);
+  };
   return (
-    <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
+    <div className="relative mt-6 border rounded-md p-4">
       {isUpdating && (
         <div className="absolute h-full w-full bg-slate-500/20 top-0 right-0 rounded-m flex items-center justify-center">
           <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
@@ -79,6 +99,11 @@ const ChaptersForm = ({ initialData }: ChaptersFormProps) => {
           )}
         </Button>
       </div>
+      <ChapterList
+        onEdit={handleOnEdit}
+        onReorder={onReorder}
+        items={initialData.chapters || []}
+      />
       {isCreating && (
         <Form {...form}>
           <form

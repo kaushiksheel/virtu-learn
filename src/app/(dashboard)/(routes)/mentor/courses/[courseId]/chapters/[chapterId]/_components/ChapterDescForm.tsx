@@ -1,4 +1,5 @@
 "use client";
+import Editor from "@/components/editor";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -7,10 +8,11 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Course } from "@prisma/client";
+import { Chapter } from "@prisma/client";
+
 import axios from "axios";
 import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -18,29 +20,35 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
+import Preview from "../../../_components/Preview";
 
-type DescFormProps = {
-  initialData: Course;
+type ChapterDescProps = {
+  chapter: Chapter;
+  courseId: string;
 };
 const formSchema = z.object({
-  description: z.string().min(1, {
-    message: "Description is required",
-  }),
+  description: z.string().min(1),
 });
 
-export default function DescForm({ initialData }: DescFormProps) {
+export default function ChapterDescForm({
+  chapter,
+  courseId,
+}: ChapterDescProps) {
   const [isEditing, setIsEditing] = React.useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { description: initialData?.description || "" },
+    defaultValues: { description: chapter?.description || "" },
   });
 
   const { isValid, isSubmitting } = form.formState;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${initialData.id}`, values);
-      toast.success("Course updated");
+      await axios.patch(
+        `/api/courses/${courseId}/chapters/${chapter.id}`,
+        values
+      );
+      toast.success("Chapter updated");
       setIsEditing(false);
       router.refresh();
     } catch (error) {
@@ -50,7 +58,7 @@ export default function DescForm({ initialData }: DescFormProps) {
   return (
     <div className="mt-6 border  rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course Description
+        Chapter Description
         <Button onClick={() => setIsEditing(!isEditing)} variant="ghost">
           {isEditing ? (
             <>Cancel</>
@@ -63,9 +71,11 @@ export default function DescForm({ initialData }: DescFormProps) {
         </Button>
       </div>
       {!isEditing && (
-        <p className="text-sm mt-2">
-          {initialData.description || "no description"}
-        </p>
+        <div className="text-sm mt-2">
+          {!chapter.description && "No Description"}
+
+          {chapter.description && <Preview value={chapter.description} />}
+        </div>
       )}
       {isEditing && (
         <Form {...form}>
@@ -79,11 +89,7 @@ export default function DescForm({ initialData }: DescFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
-                      disabled={isSubmitting}
-                      placeholder=" Add a description"
-                      {...field}
-                    />
+                    <Editor {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

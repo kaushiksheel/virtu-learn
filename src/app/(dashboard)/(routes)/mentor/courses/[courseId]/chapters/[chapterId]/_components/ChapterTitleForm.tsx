@@ -8,9 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Course } from "@prisma/client";
 import axios from "axios";
 import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -19,28 +17,37 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
 
-type DescFormProps = {
-  initialData: Course;
+type ChapterTitleForm = {
+  initialData: {
+    title: string;
+    id: string;
+  };
+  courseId: string;
 };
 const formSchema = z.object({
-  description: z.string().min(1, {
-    message: "Description is required",
-  }),
+  title: z.string().min(1),
 });
 
-export default function DescForm({ initialData }: DescFormProps) {
+export default function ChapterTitleForm({
+  initialData,
+  courseId,
+}: ChapterTitleForm) {
   const [isEditing, setIsEditing] = React.useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { description: initialData?.description || "" },
+    defaultValues: initialData,
   });
 
   const { isValid, isSubmitting } = form.formState;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log(values);
     try {
-      await axios.patch(`/api/courses/${initialData.id}`, values);
-      toast.success("Course updated");
+      await axios.patch(
+        `/api/courses/${courseId}/chapters/${initialData.id}`,
+        values
+      );
+      toast.success("Chapter updated");
       setIsEditing(false);
       router.refresh();
     } catch (error) {
@@ -50,23 +57,19 @@ export default function DescForm({ initialData }: DescFormProps) {
   return (
     <div className="mt-6 border  rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course Description
+        Chapter Title
         <Button onClick={() => setIsEditing(!isEditing)} variant="ghost">
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
               <Pencil size={17} className="mr-2" />
-              Edit Description
+              Edit title
             </>
           )}
         </Button>
       </div>
-      {!isEditing && (
-        <p className="text-sm mt-2">
-          {initialData.description || "no description"}
-        </p>
-      )}
+      {!isEditing && <p className="text-sm mt-2">{initialData.title}</p>}
       {isEditing && (
         <Form {...form}>
           <form
@@ -75,13 +78,13 @@ export default function DescForm({ initialData }: DescFormProps) {
           >
             <FormField
               control={form.control}
-              name="description"
+              name="title"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
+                    <Input
                       disabled={isSubmitting}
-                      placeholder=" Add a description"
+                      placeholder="eg. Introduction"
                       {...field}
                     />
                   </FormControl>

@@ -47,7 +47,7 @@ export default function PriceForm({ initialData }: PriceFormProps) {
     }
   };
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
+    <div className="mt-6 border  rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
         Course Price
         <Button onClick={() => setIsEditing(!isEditing)} variant="ghost">

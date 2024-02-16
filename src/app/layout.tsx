@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Nunito } from "next/font/google";
 import ToastProvider from "@/components/providers/toaster-provider";
+import ConfettiProvider from "@/components/providers/confetti-provider";
 
 export const metadata: Metadata = {
   title: "VirtuLearn",
@@ -39,6 +40,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <ConfettiProvider />
             <ToastProvider />
             {children}
           </ThemeProvider>

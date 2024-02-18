@@ -1,23 +1,21 @@
-"use client";
-import { formatPrice } from "@/lib/formatPrice";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { BookOpen } from "lucide-react";
 
-type CourseCardProps = {
+import { formatPrice } from "@/lib/formatPrice";
+import { CourseProgress } from "@/components/course-progress";
+
+interface CourseCardProps {
   id: string;
   title: string;
-  imageUrl: string | null;
+  imageUrl: string;
   chaptersLength: number;
-  price: number | null;
+  price: number;
   progress: number | null;
-  category: {
-    id: string;
-    name: string;
-  } | null;
-};
+  category: string;
+}
 
-function CourseCard({
+export const CourseCard = ({
   id,
   title,
   imageUrl,
@@ -25,54 +23,38 @@ function CourseCard({
   price,
   progress,
   category,
-}: CourseCardProps) {
+}: CourseCardProps) => {
   return (
     <Link href={`/courses/${id}`}>
-      <div className="group hover:shadow-sm transition-all overflow-hidden rounded-md p-3 h-full border">
-        <div className="relative w-full aspect-video overflow-hidden rounded-md">
-          <Image
-            src={imageUrl!}
-            alt={title}
-            fill
-            objectFit="cover"
-            className="object-cover"
-          />
+      <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
+        <div className="relative w-full aspect-video rounded-md overflow-hidden">
+          <Image fill className="object-cover" alt={title} src={imageUrl} />
         </div>
         <div className="flex flex-col pt-2">
-          <div className="text-lg md:text-base font-semibold group-hover:text-sky-700 transition line-clamp-2">
+          <div className="text-lg md:text-base font-medium group-hover:text-sky-700 transition line-clamp-2">
             {title}
           </div>
-          <p className="text-xs text-muted-foreground">{category?.name}</p>
+          <p className="text-xs text-muted-foreground">{category}</p>
           <div className="my-3 flex items-center gap-x-2 text-sm md:text-xs">
             <div className="flex items-center gap-x-1 text-slate-500">
               <span>
                 {chaptersLength} {chaptersLength === 1 ? "Chapter" : "Chapters"}
               </span>
-              <span>&middot;</span>
             </div>
           </div>
           {progress !== null ? (
-            <div className="flex items-center gap-x-2">
-              <div className="flex items-center gap-x-1">
-                <span className="text-sm text-slate-500">Progress:</span>
-                <span className="text-sm text-slate-500">
-                  {progress}% Complete
-                </span>
-              </div>
-              <div className="flex items-center gap-x-1">
-                <span className="text-sm text-slate-500">Last:</span>
-                <span className="text-sm text-slate-500">Chapter 2</span>
-              </div>
-            </div>
+            <CourseProgress
+              variant={progress === 100 ? "success" : "default"}
+              size="sm"
+              value={progress}
+            />
           ) : (
-            <p className="text-md md:text-sm font-medium text-slate-700 font-medium">
-              {formatPrice(price as number)}
+            <p className="text-md md:text-sm font-medium text-slate-700">
+              {formatPrice(price)}
             </p>
           )}
         </div>
       </div>
     </Link>
   );
-}
-
-export default CourseCard;
+};

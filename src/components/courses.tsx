@@ -1,6 +1,6 @@
 import { Category, Course } from "@prisma/client";
 import React from "react";
-import CourseCard from "./course-card";
+import { CourseCard } from "./course-card";
 
 type CourseWithProgressAndCateogy = Course & {
   category: Category | null;
@@ -22,11 +22,11 @@ function Courses({ items }: CoursesProps) {
               key={id}
               id={id}
               title={title}
-              imageUrl={imageUrl}
+              imageUrl={imageUrl!}
               chaptersLength={chapters.length}
-              price={price}
+              price={price!}
               progress={progress}
-              category={category}
+              category={category?.name!}
             />
           )
         )}

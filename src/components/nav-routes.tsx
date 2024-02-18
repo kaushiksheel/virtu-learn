@@ -12,7 +12,7 @@ function NavRoutes() {
   const pathname = usePathname();
 
   const isMentorPage = pathname.startsWith("/mentor");
-  const isPlayerPage = pathname.startsWith("/chapter");
+  const isCoursePage = pathname.startsWith("/courses");
   const isSearchPage = pathname.startsWith("/search");
   return (
     <>
@@ -22,7 +22,7 @@ function NavRoutes() {
         </div>
       )}
       <div className="flex items-center gap-x-3 ml-auto">
-        {isMentorPage || isPlayerPage ? (
+        {isMentorPage || isCoursePage ? (
           <Link href="/">
             <Button className="flex items-center gap-x-2 py-1">
               <LogOut size={20} />

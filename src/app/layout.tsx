@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Nunito } from "next/font/google";
+import { Poppins, Barlow } from "next/font/google";
 import ToastProvider from "@/components/providers/toaster-provider";
 import ConfettiProvider from "@/components/providers/confetti-provider";
 
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
 };
 
-const nunito = Nunito({
+const poppins = Barlow({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
 });
@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={nunito.className}>
+        <body className={poppins.className}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
